@@ -1,8 +1,28 @@
 # Análise de Skills do Agent Zero
 
-Este documento apresenta uma análise detalhada das skills (ferramentas e instrumentos) disponíveis no framework [Agent Zero](https://github.com/agent0ai/agent-zero), categorizadas por funcionalidade. Estas skills servem como base para a construção das capacidades nativas do nosso ecossistema.
+Este documento apresenta uma análise detalhada das skills (ferramentas e instrumentos), agentes (mentes) e estrutura de conhecimento disponíveis no framework [Agent Zero](https://github.com/agent0ai/agent-zero). Estas capacidades servem como base para a construção das capacidades nativas do nosso ecossistema.
 
-## 1. Comunicação e Colaboração
+## 1. Mentes Base (Agentes)
+O framework fornece "personas" ou "mentes" especializadas que atuam como o cérebro do sistema. Estas são as mentes que servirão como "database" inicial de inteligência para criar novos ecossistemas.
+
+| Agente | Perfil | Capacidades Principais |
+|--------|--------|------------------------|
+| **Agent 0** | Generalista | Agente raiz. Gerencia outros agentes, delega tarefas e possui acesso a todas as ferramentas. Atua como orquestrador. |
+| **Developer** | Engenheiro de Software | Especializado em escrever, depurar e executar código (Python, NodeJS, Shell). Focado em construção de software e automação. |
+| **Researcher** | Pesquisador (Deep ReSearch) | Especializado em busca profunda, validação de fontes, análise de dados e síntese de relatórios complexos. Executa protocolos rigorosos de pesquisa acadêmica e de mercado. |
+| **Hacker** | Especialista em Segurança | Focado em testes de penetração, análise de vulnerabilidades e segurança ofensiva/defensiva (em ambientes controlados). |
+
+Estas mentes são definidas por seus **System Prompts** (localizados em `agents/*/prompts/`), que contêm as instruções cognitivas, metodologias e restrições de cada perfil.
+
+## 2. Estrutura de Conhecimento (Database)
+O sistema utiliza uma estrutura de pastas para armazenar conhecimento estático e dinâmico, que alimenta o RAG (Retrieval Augmented Generation).
+
+- **Knowledge Base (`knowledge/`)**:
+    - `default/`: Conhecimento padrão que vem com o sistema (ex: documentação do próprio Agent Zero em `knowledge/default/main/about`).
+    - `custom/`: Espaço reservado para o conhecimento específico do nosso projeto (ECOSSISTEMA DE MENTES). É aqui que os "artefatos cognitivos" minerados devem ser armazenados.
+    - Estrutura interna: Dividido em `main` (conhecimento geral) e `solutions` (memória de soluções passadas).
+
+## 3. Comunicação e Colaboração (Tools)
 Ferramentas que permitem ao agente interagir com usuários e outros agentes.
 
 | Skill | Arquivo | Descrição |
@@ -12,7 +32,7 @@ Ferramentas que permitem ao agente interagir com usuários e outros agentes.
 | **Notify User** | `notify_user.py` | Envia notificações para a interface do usuário com diferentes níveis de prioridade (INFO, WARNING, ALERT). |
 | **Response** | `response.py` | Envia a resposta final para o usuário ou agente superior, encerrando o loop de execução atual. |
 
-## 2. Execução de Código e Sistema
+## 4. Execução de Código e Sistema (Tools)
 Capacidades fundamentais para operação do sistema e execução de tarefas técnicas.
 
 | Skill | Arquivo | Descrição |
@@ -21,7 +41,7 @@ Capacidades fundamentais para operação do sistema e execução de tarefas téc
 | **Input** | `input.py` | Envia entrada de teclado (keystrokes) para sessões de terminal ativas. Útil para interagir com programas CLI. |
 | **Wait** | `wait.py` | Pausa a execução do agente por uma duração específica ou até um horário determinado. |
 
-## 3. Navegação Web e Pesquisa
+## 5. Navegação Web e Pesquisa (Tools)
 Ferramentas para interação com a internet e extração de informações.
 
 | Skill | Arquivo | Descrição |
@@ -30,7 +50,7 @@ Ferramentas para interação com a internet e extração de informações.
 | **Search Engine** | `search_engine.py` | Realiza buscas na web utilizando SearXNG. Retorna títulos, URLs e snippets de conteúdo. |
 | **YouTube Download** | `instruments/default/yt_download` | Instrumento (script) para download de vídeos do YouTube utilizando `yt-dlp`. |
 
-## 4. Memória e Conhecimento
+## 6. Memória e Conhecimento (Tools)
 Gestão de memória de longo prazo e acesso a documentos.
 
 | Skill | Arquivo | Descrição |
@@ -41,7 +61,7 @@ Gestão de memória de longo prazo e acesso a documentos.
 | **Memory Delete** | `memory_delete.py` | Remove itens específicos da memória através de seus IDs. |
 | **Document Query** | `document_query.py` | Realiza perguntas sobre documentos carregados (RAG - Retrieval Augmented Generation). Suporta múltiplos documentos. |
 
-## 5. Configuração e Gerenciamento
+## 7. Configuração e Gerenciamento (Tools)
 Controle sobre o comportamento e agendamento do agente.
 
 | Skill | Arquivo | Descrição |
@@ -49,7 +69,7 @@ Controle sobre o comportamento e agendamento do agente.
 | **Behaviour Adjustment** | `behaviour_adjustment.py` | Permite ao agente atualizar suas próprias regras de comportamento e prompt de sistema, facilitando a auto-evolução. |
 | **Scheduler** | `scheduler.py` | Gerenciador completo de tarefas. Permite criar, listar e deletar tarefas agendadas (cron), ad-hoc (única execução) ou planejadas (sequência de passos). |
 
-## 6. Visão e Mídia
+## 8. Visão e Mídia (Tools)
 Capacidades de processamento de mídia.
 
 | Skill | Arquivo | Descrição |
@@ -58,7 +78,6 @@ Capacidades de processamento de mídia.
 
 ---
 
-## Observações para Implementação
-- **Dependências**: Algumas tools dependem de bibliotecas externas (`browser-use`, `yt-dlp`, `searxng`) e serviços (Docker para execução de código segura).
-- **Segurança**: A tool de execução de código (`code_execution_tool`) é extremamente poderosa e deve ser usada em ambiente sandbox.
-- **Interoperabilidade**: O protocolo A2A (`a2a_chat`) é interessante para criar enxames de agentes.
+## Observações para o Ecossistema
+- **Mentes como Database**: Os arquivos em `agents/` (especialmente os prompts) são o "código-fonte" das mentes. Para criar novos ecossistemas, suas mentes usarão estes templates como base, modificando os prompts para especializar o novo agente.
+- **Tools como Habilidades**: As ferramentas listadas (Code, Browser, etc.) são as habilidades que podem ser plugadas nessas novas mentes.
