@@ -1,0 +1,63 @@
+# Regras do RAG Dinâmico
+# Versão: 1.0
+# Data: 2026-01-31
+
+regras:
+  embeddings:
+    - id: R-RAG-E-01
+      modulo: rag
+      categoria: embeddings
+      condicao: "artifact_created == true"
+      acao: create_embedding
+      prioridade: alta
+      descricao: Criar embedding automaticamente quando artefato criado
+
+    - id: R-RAG-E-02
+      modulo: rag
+      categoria: embeddings
+      condicao: "artifact_updated == true"
+      acao: update_embedding
+      prioridade: alta
+      descricao: Atualizar embedding automaticamente quando artefato atualizado
+
+    - id: R-RAG-E-03
+      modulo: rag
+      categoria: embeddings
+      condicao: "artifact_deleted == true"
+      acao: delete_embedding
+      prioridade: normal
+      descricao: Deletar embedding quando artefato deletado
+
+  busca:
+    - id: R-RAG-B-01
+      modulo: rag
+      categoria: busca
+      condicao: "search_query"
+      acao: prioritize_fresh
+      prioridade: normal
+      descricao: Prioriza embeddings com freshness maior
+
+    - id: R-RAG-B-02
+      modulo: rag
+      categoria: busca
+      condicao: "is_canonical_author == true"
+      acao: prioritize_canonical
+      prioridade: alta
+      descricao: Prioriza artefatos de autores canonicos
+
+  freshness:
+    - id: R-RAG-F-01
+      modulo: rag
+      categoria: freshness
+      condicao: "artifact_created == true"
+      acao: set_freshness_one
+      prioridade: alta
+      descricao: Define freshness como 1.0 quando artefato criado
+
+    - id: R-RAG-F-02
+      modulo: rag
+      categoria: freshness
+      condicao: "embedding_age_days > 30"
+      acao: mark_obsolete
+      prioridade: alta
+      descricao: Marca obsoleto apos 30 dias
